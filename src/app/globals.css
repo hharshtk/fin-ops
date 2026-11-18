@@ -1,5 +1,241 @@
 @import "tailwindcss";
 
-@theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+/*
+ * Workstation tokens. Railway-timetable world: navy shell, off-white ground, white working sheet,
+ * hairline rules, signal colours reserved for state. Colours are OKLCH; dark theme can be added by
+ * redefining these variables under a [data-theme] selector.
+ */
+@theme {
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  /* Fixed rem scale, ~1.15 ratio. Body and tables run at 13px. */
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.8125rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 0.875rem;
+  --text-base--line-height: 1.25rem;
+  --text-md: 1rem;
+  --text-md--line-height: 1.375rem;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.625rem;
+  --text-xl: 1.625rem;
+  --text-xl--line-height: 2rem;
+
+  /* Shell */
+  --color-rail: oklch(0.275 0.058 262);
+  --color-rail-raised: oklch(0.335 0.064 262);
+  --color-rail-line: oklch(0.37 0.05 262);
+  --color-rail-ink: oklch(0.96 0.008 262);
+  --color-rail-ink-2: oklch(0.8 0.028 262);
+
+  /* Working surfaces */
+  --color-ground: oklch(0.968 0.005 95);
+  --color-surface: oklch(1 0 0);
+  --color-sunken: oklch(0.958 0.005 95);
+  --color-line: oklch(0.9 0.006 95);
+  --color-line-strong: oklch(0.79 0.01 95);
+
+  /* Ink, navy-tinted */
+  --color-ink: oklch(0.22 0.02 262);
+  --color-ink-2: oklch(0.4 0.018 262);
+  --color-ink-3: oklch(0.5 0.014 262);
+  --color-ink-4: oklch(0.66 0.01 262);
+
+  /* Interaction */
+  --color-navy: oklch(0.33 0.078 262);
+  --color-navy-hover: oklch(0.29 0.075 262);
+  --color-hover: oklch(0.968 0.008 262);
+  --color-select: oklch(0.938 0.026 262);
+  --color-focus: oklch(0.55 0.16 258);
+
+  /* Signal aspects: the only saturated colours, used for state */
+  --color-sig-red: oklch(0.565 0.195 29);
+  --color-sig-red-ink: oklch(0.5 0.18 29);
+  --color-sig-red-wash: oklch(0.962 0.022 29);
+  --color-sig-yellow: oklch(0.81 0.16 82);
+  --color-sig-yellow-ink: oklch(0.5 0.105 68);
+  --color-sig-yellow-wash: oklch(0.968 0.04 90);
+  --color-sig-green: oklch(0.6 0.13 152);
+  --color-sig-green-ink: oklch(0.46 0.1 152);
+  --color-sig-green-wash: oklch(0.962 0.028 152);
+  --color-lamp-off: oklch(0.4 0.04 262);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    caret-color: var(--color-navy);
+    accent-color: var(--color-navy);
+    scrollbar-color: oklch(0.8 0.01 262) transparent;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+    font-feature-settings: "lnum";
+  }
+
+  ::selection {
+    background: oklch(0.87 0.06 262);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 1px;
+  }
+
+  table {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  a {
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+
+  [popover] {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+  }
+
+  dialog::backdrop {
+    background: oklch(0.22 0.04 262 / 0.35);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-ink-3);
+    opacity: 1;
+  }
+}
+
+/* Timetable figures: tabular, slightly condensed. */
+@utility figures {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-stretch: 84%;
+}
+
+/* Identifiers (PAN, GSTIN, ARN): tabular with slashed zero so O and 0 never collide. */
+@utility ident {
+  font-variant-numeric: tabular-nums lining-nums slashed-zero;
+  letter-spacing: 0.01em;
+}
+
+/* Column heads and group labels, set like a timetable header. */
+@utility caps {
+  font-size: var(--text-2xs);
+  line-height: var(--text-2xs--line-height);
+  font-weight: 600;
+  font-stretch: 86%;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+@utility condensed {
+  font-stretch: 78%;
+}
+
+@utility scroll-thin {
+  scrollbar-width: thin;
+}
+
+@layer components {
+  /* Four-aspect signal: a two-lamp head. Red lights the lower lamp, yellow and green the upper,
+     double yellow both. Position carries meaning as well as colour. */
+  .signal {
+    display: inline-flex;
+    flex: none;
+    flex-direction: column;
+    gap: 1px;
+    width: 9px;
+    height: 15px;
+    padding: 2px;
+    border-radius: 2px;
+    background: var(--color-rail);
+    vertical-align: middle;
+  }
+  .signal > i {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: var(--color-lamp-off);
+  }
+  .signal[data-aspect="red"] > i:last-child {
+    background: var(--color-sig-red);
+  }
+  .signal[data-aspect="yellow"] > i:first-child {
+    background: var(--color-sig-yellow);
+  }
+  .signal[data-aspect="double-yellow"] > i {
+    background: var(--color-sig-yellow);
+  }
+  .signal[data-aspect="green"] > i:first-child {
+    background: var(--color-sig-green);
+  }
+  .signal-lg {
+    width: 13px;
+    height: 22px;
+    padding: 3px;
+    gap: 2px;
+    border-radius: 3px;
+    background: var(--color-rail-raised);
+    box-shadow: inset 0 0 0 1px var(--color-rail-line);
+  }
+  .signal-lg > i {
+    width: 7px;
+    height: 7px;
+  }
+
+  /* Timetable rhythm: within a group, every fifth row carries a stronger rule; groups are
+     separated by a double-weight rule. */
+  .tt tbody > tr:nth-child(5n):not(:last-child) > td {
+    border-bottom-color: var(--color-line-strong);
+  }
+  .tt tbody + tbody > tr:first-child > td,
+  .tt tbody + tbody > tr:first-child > th {
+    border-top: 2px solid var(--color-line-strong);
+  }
+
+  /* Row selection. The row link stretches over the row and marks itself active from the URL
+     (see RowLink); the row follows its own link. Focus gives instant feedback on click. */
+  .row {
+    position: relative;
+  }
+  .row:hover > td {
+    background: var(--color-hover);
+  }
+  .row:has(> td a[data-active]) > td,
+  .row:has(.row-link:focus) > td {
+    background: var(--color-select);
+  }
+  .cell-link[data-active] {
+    background: var(--color-select);
+  }
+  .row-link {
+    outline: none;
+  }
+  .row-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .row:has(.row-link:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+  .row .above-link {
+    position: relative;
+    z-index: 1;
+  }
 }

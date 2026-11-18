@@ -10,7 +10,8 @@ before proposing features.
 
 - **Speed first.** Use Server Components by default. Put `"use client"` only on the leaf components that
   need interactivity. Justify any new client-side dependency by its bundle cost.
-- **Must not look vibe-coded.** No default or template visuals. Follow the design system once it exists.
+- **Must not look vibe-coded.** No default or template visuals. Follow the design system in
+  [DESIGN.md](DESIGN.md) (tokens live in `src/app/globals.css`).
 - **India-first formatting.** INR with `en-IN` grouping, Indian FY (Apr to Mar), DD/MM/YYYY, IST.
 
 ## Commands
