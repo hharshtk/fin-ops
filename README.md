@@ -16,6 +16,21 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
+## Database connection check
+
+Set `DATABASE_URL` in `.env.local`, then run:
+
+```bash
+npm run db:check
+```
+
+This uses `pg` to run `SELECT 1` inside a read-only transaction, verifies TLS with the bundled public
+Supabase CA certificate, and exits with code 1 on failure. Credentials are never printed. Percent-encode
+special characters in the URL's password; for example, `$` becomes `%24`.
+
+The certificate in `scripts/certs/supabase-ca.crt` comes from
+[Supabase's certificate download](https://supabase-downloads.s3-ap-southeast-1.amazonaws.com/prod/ssl/prod-ca-2021.crt).
+
 ## Phase 1: the workstation UI
 
 Phase 1 is frontend only, running on fictional sample data (the command bar shows a "Sample data" marker).
