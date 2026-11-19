@@ -28,34 +28,37 @@ export function Register({
   for (const f of filings) groups.set(f.due, [...(groups.get(f.due) ?? []), f]);
 
   return (
-    <div className="scroll-thin overflow-x-auto">
-      <Table
-        label="Filings register"
-        className={showClient ? "md:min-w-[52rem]" : "md:min-w-[40rem]"}
-      >
+    // Columns drop by the table's own width (a container query). The "late / due" figure stays at
+    // every width: it is the text that goes with the signal.
+    <div className="@container scroll-thin overflow-x-auto">
+      <Table label="Filings register">
         <thead>
           <tr>
             <Th width="2.5rem" align="center">
               <span className="sr-only">Signal</span>
             </Th>
-            <Th width="5.5rem" className="max-md:hidden">
+            <Th width="5.5rem" className="@max-[36rem]:hidden">
               Due
             </Th>
             {showClient && <Th>Client</Th>}
             <Th width="7.5rem">Form</Th>
-            <Th width="7.5rem" className="max-md:hidden">
+            <Th width="7.5rem" className="@max-[44rem]:hidden">
               Period
             </Th>
-            <Th width="7.5rem">Status</Th>
-            <Th width="4.75rem" align="right" className="max-md:hidden">
+            <Th width="7.5rem" className="@max-[36rem]:hidden">
+              Status
+            </Th>
+            <Th width="4.75rem" align="right">
               Late / due
             </Th>
-            <Th width="5.5rem" className="max-md:hidden">
+            <Th width="5.5rem" className="@max-[52rem]:hidden">
               Assignee
             </Th>
             <Th
               width={showClient ? "12rem" : undefined}
-              className={showClient ? "max-2xl:hidden" : "max-md:hidden"}
+              className={
+                showClient ? "@max-[72rem]:hidden" : "@max-[52rem]:hidden"
+              }
             >
               Filed · acknowledgement
             </Th>
@@ -71,7 +74,7 @@ export function Register({
                   <Td align="center">
                     <Signal aspect={aspectFor(f.due, done)} />
                   </Td>
-                  <Td className="max-md:hidden">
+                  <Td className="@max-[36rem]:hidden">
                     {i === 0 && (
                       <span className="flex items-baseline gap-1.5">
                         <span
@@ -94,7 +97,7 @@ export function Register({
                   {showClient && (
                     <Td className="w-full max-w-0">
                       <div className="flex min-w-0 items-baseline gap-2">
-                        <span className="w-[4.25rem] shrink-0 text-xs ident text-ink-3 max-sm:hidden">
+                        <span className="w-[4.25rem] shrink-0 text-xs ident text-ink-3 @max-[30rem]:hidden">
                           {f.clientCode}
                         </span>
                         <RowLink
@@ -119,21 +122,21 @@ export function Register({
                       </RowLink>
                     )}
                   </Td>
-                  <Td className="text-ink-2 max-md:hidden">{f.period}</Td>
-                  <Td>
+                  <Td className="text-ink-2 @max-[44rem]:hidden">{f.period}</Td>
+                  <Td className="@max-[36rem]:hidden">
                     <Status kind="filing" value={f.status} />
                   </Td>
-                  <Td align="right" className="max-md:hidden">
+                  <Td align="right">
                     <DueIn due={f.due} done={done} />
                   </Td>
-                  <Td className="text-ink-2 max-md:hidden">
+                  <Td className="text-ink-2 @max-[52rem]:hidden">
                     {staff[f.assigneeId]?.name.split(" ")[0]}
                   </Td>
                   <Td
                     className={
                       showClient
-                        ? "max-w-[12rem] truncate text-xs ident text-ink-3 max-2xl:hidden"
-                        : "truncate text-xs ident text-ink-3 max-md:hidden"
+                        ? "max-w-[12rem] truncate text-xs ident text-ink-3 @max-[72rem]:hidden"
+                        : "truncate text-xs ident text-ink-3 @max-[52rem]:hidden"
                     }
                   >
                     {done

@@ -144,7 +144,7 @@ async function ClientWorkspace({
   ];
 
   return (
-    <div className="min-h-full bg-surface">
+    <div className="min-h-full min-w-0 flex-1 bg-surface">
       <header className="border-b border-line px-3 pt-2.5 sm:px-4">
         <nav
           aria-label="Breadcrumb"

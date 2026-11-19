@@ -123,6 +123,8 @@
 @utility figures {
   font-variant-numeric: tabular-nums lining-nums;
   font-stretch: 84%;
+  /* Narrowing shrinks the word space too; without this "19d late" reads as "19dlate". */
+  word-spacing: 0.12em;
 }
 
 /* Identifiers (PAN, GSTIN, ARN): tabular with slashed zero so O and 0 never collide. */

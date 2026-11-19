@@ -24,35 +24,49 @@ export function ClientTable({
   hrefFor: (code: string) => string;
 }) {
   return (
-    <div className="scroll-thin overflow-x-auto">
-      <Table label="Clients" className="min-w-[52rem]">
+    // Columns drop by the table's own width (a container query), not the viewport's, because the
+    // rail and inspector take different shares at each breakpoint. The client name is never the
+    // column that gives way.
+    <div className="@container scroll-thin overflow-x-auto">
+      <Table label="Clients">
         <thead>
           <tr>
             <Th width="2.5rem" align="center">
               <span className="sr-only">Signal</span>
             </Th>
-            <Th width="5.25rem">Code</Th>
+            <Th width="5.25rem" className="@max-[26rem]:hidden">
+              Code
+            </Th>
             <Th>Client</Th>
-            <Th width="7.5rem" className="max-2xl:hidden">
+            <Th width="7.5rem" className="@max-[70rem]:hidden">
               Constitution
             </Th>
-            <Th width="6.75rem">PAN</Th>
-            <Th width="10.5rem" className="max-2xl:hidden">
+            <Th width="6.75rem" className="@max-[56rem]:hidden">
+              PAN
+            </Th>
+            <Th width="10.5rem" className="@max-[80rem]:hidden">
               GSTIN
             </Th>
-            <Th width="6.25rem">GST</Th>
-            <Th width="5rem">Partner</Th>
-            <Th width="4rem" align="right">
+            <Th width="6.25rem" className="@max-[56rem]:hidden">
+              GST
+            </Th>
+            <Th width="5rem" className="@max-[56rem]:hidden">
+              Partner
+            </Th>
+            <Th width="4rem" align="right" className="@max-[40rem]:hidden">
               Open
             </Th>
-            <Th width="5rem" align="right">
+            <Th width="5rem" align="right" className="@max-[40rem]:hidden">
               Overdue
             </Th>
-            <Th width="6.5rem" align="right">
+            <Th width="6.5rem" align="right" className="@max-[40rem]:hidden">
               Fees due
             </Th>
-            <Th width="6rem" align="right" className="max-2xl:hidden">
+            <Th width="6rem" align="right" className="@max-[70rem]:hidden">
               Last contact
+            </Th>
+            <Th width="4.5rem" align="right" className="@min-[40rem]:hidden">
+              State
             </Th>
           </tr>
         </thead>
@@ -62,7 +76,7 @@ export function ClientTable({
               <Td align="center">
                 <Signal aspect={aspect} />
               </Td>
-              <Td className="ident text-ink-2">{c.code}</Td>
+              <Td className="ident text-ink-2 @max-[26rem]:hidden">{c.code}</Td>
               <Td className="w-full max-w-0">
                 <div className="flex min-w-0 items-baseline gap-2">
                   <RowLink
@@ -72,28 +86,32 @@ export function ClientTable({
                   >
                     {c.name}
                   </RowLink>
-                  <span className="truncate text-xs text-ink-3 max-2xl:hidden">
+                  <span className="truncate text-xs text-ink-3 @max-[70rem]:hidden">
                     {c.city}
                   </span>
                 </div>
               </Td>
-              <Td className="text-ink-2 max-2xl:hidden">{c.constitution}</Td>
-              <Td className="ident">{c.pan}</Td>
-              <Td className="ident text-ink-2 max-2xl:hidden">
+              <Td className="text-ink-2 @max-[70rem]:hidden">
+                {c.constitution}
+              </Td>
+              <Td className="ident @max-[56rem]:hidden">{c.pan}</Td>
+              <Td className="ident text-ink-2 @max-[80rem]:hidden">
                 {c.gstin ?? <span className="text-ink-4">—</span>}
               </Td>
-              <Td className="text-ink-2">
+              <Td className="text-ink-2 @max-[56rem]:hidden">
                 {c.gstScheme === "Unregistered" ? (
                   <span className="text-ink-4">—</span>
                 ) : (
                   c.gstScheme
                 )}
               </Td>
-              <Td className="text-ink-2">{staff[c.partnerId]?.initials}</Td>
-              <Td align="right">
+              <Td className="text-ink-2 @max-[56rem]:hidden">
+                {staff[c.partnerId]?.initials}
+              </Td>
+              <Td align="right" className="@max-[40rem]:hidden">
                 {open || <span className="text-ink-4">·</span>}
               </Td>
-              <Td align="right">
+              <Td align="right" className="@max-[40rem]:hidden">
                 {overdue ? (
                   <span className="font-semibold text-sig-red-ink">
                     {overdue}
@@ -102,15 +120,26 @@ export function ClientTable({
                   <span className="text-ink-4">·</span>
                 )}
               </Td>
-              <Td align="right">
+              <Td align="right" className="@max-[40rem]:hidden">
                 {outstanding ? (
                   inrShort(outstanding)
                 ) : (
                   <span className="text-ink-4">·</span>
                 )}
               </Td>
-              <Td align="right" className="text-ink-2 max-2xl:hidden">
+              <Td align="right" className="text-ink-2 @max-[70rem]:hidden">
                 {dayMonth(c.lastContact)}
+              </Td>
+              <Td align="right" className="@min-[40rem]:hidden">
+                {overdue > 0 ? (
+                  <span className="font-semibold text-sig-red-ink">
+                    {overdue} late
+                  </span>
+                ) : open > 0 ? (
+                  <span className="text-ink-2">{open} open</span>
+                ) : (
+                  <span className="text-ink-3">clear</span>
+                )}
               </Td>
             </Tr>
           ))}
