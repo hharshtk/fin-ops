@@ -59,7 +59,7 @@ Finexo is an existing Indian product for CA firms that we're using as a benchmar
 - Pricing model: per firm or per user?
 - Product name.
 - Hosting provider and data residency.
-- Stack beyond the frontend: database, auth, UI component layer, testing.
+- Stack beyond the frontend: UI component layer, testing.
 
 ## Tech baseline (decided)
 
@@ -68,6 +68,10 @@ Finexo is an existing Indian product for CA firms that we're using as a benchmar
 - Tailwind CSS v4
 - ESLint (Next.js Core Web Vitals rules) and Prettier
 - npm
+- PostgreSQL 15+ with Drizzle ORM. Plain Postgres only, no provider-specific features, so the host can
+  change. Schema and design notes: [DATA-MODEL.md](DATA-MODEL.md)
+- Our own authentication (email and password first, OAuth providers such as Google later), not a hosted
+  auth service
 
 ## Roadmap
 

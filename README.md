@@ -31,6 +31,21 @@ special characters in the URL's password; for example, `$` becomes `%24`.
 The certificate in `scripts/certs/supabase-ca.crt` comes from
 [Supabase's certificate download](https://supabase-downloads.s3-ap-southeast-1.amazonaws.com/prod/ssl/prod-ca-2021.crt).
 
+## Database schema and migrations
+
+The schema is plain Postgres (15 or newer) defined with Drizzle in `src/db/schema/`; design notes are in
+[docs/DATA-MODEL.md](docs/DATA-MODEL.md). Migrations live in `drizzle/` and are applied in order.
+
+| Command               | What it does                                                |
+| --------------------- | ----------------------------------------------------------- |
+| `npm run db:generate` | Write a new migration from schema changes (`--name <slug>`) |
+| `npm run db:migrate`  | Apply pending migrations to `DATABASE_URL`                  |
+| `npm run db:studio`   | Browse the database in Drizzle Studio                       |
+
+TLS is verified against `DATABASE_CA_CERT` (a file path, defaulting to the bundled Supabase certificate).
+To point at another Postgres host, change `DATABASE_URL` and `DATABASE_CA_CERT`; set `DATABASE_SSL=disable`
+only for a local database.
+
 ## Phase 1: the workstation UI
 
 Phase 1 is frontend only, running on fictional sample data (the command bar shows a "Sample data" marker).
